@@ -1,5 +1,12 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import filedialog, messagebox
+
+import PredictScouter
+
+from . import globals
+from .ColumnWindow import ColumnWindow
+
 
 class MainWindow(Tk):
 
@@ -40,8 +47,40 @@ class MainWindow(Tk):
 
 
     def handle_import_button(self):
-        pass
+        """
+        Prompt user to import a CSV file.
+
+        Called when import CSV button is pressed.
+
+        If file selected:
+            Set file to global variable
+        If cancelled:
+            Show error box
+        """
+
+        csv_file_dialog = filedialog.askopenfile(title='Select CSV file', filetypes=[('CSV file', '*.csv')])
+
+        if csv_file_dialog:
+
+            # Set global variables after file is imported
+            globals.Prediction.csv_file = csv_file_dialog
+            csv_file_dialog.close()
+            globals.Prediction.prediction = PredictScouter.PredictScouter(csv_file_dialog.name)
+
+            # Display column selection window, close current window
+            globals.GUI.view = ColumnWindow()
+            self.destroy()
+
+        else:
+
+            # Display error on cancel
+            messagebox.showerror('File import error', 'No CSV file imported')
 
 
     def handle_help_button(self):
+        """
+        Display the user manual to the user.
+
+        Functionality to be implemented in a later version.
+        """
         pass
