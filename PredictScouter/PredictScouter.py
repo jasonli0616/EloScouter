@@ -1,3 +1,5 @@
+import os
+
 class PredictScouter:
 
     def __init__(self, csv_file_path):
@@ -6,6 +8,9 @@ class PredictScouter:
 
         Sets the CSV value for the 
         """
+
+        if not os.path.isfile(csv_file_path):
+            raise FileNotFoundError(f"The selected path: '{csv_file_path}' is not a file.")
 
         self._csv_file_path = csv_file_path
         self.column_types = dict()
