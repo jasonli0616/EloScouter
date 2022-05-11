@@ -75,8 +75,6 @@ class MainWindow(Tk):
             # Set selected columns to predictor backend
             globals.Prediction.prediction.set_columns(globals.GUI.selected_columns)
 
-            print(globals.Prediction.prediction.get_columns())
-
         else:
 
             # Display error on cancel
