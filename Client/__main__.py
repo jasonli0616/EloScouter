@@ -10,9 +10,5 @@ This file runs the main process.
 from . import globals
 from .MainWindow import MainWindow
 
-# Set view to homepage on first run
-if not globals.GUI.view:
-    globals.GUI.view = MainWindow()
-
 # Display the current view
-globals.GUI.view.mainloop()
+MainWindow().mainloop()

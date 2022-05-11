@@ -68,10 +68,40 @@ class PredictScouter:
                     .split(',')
 
 
+
+    def set_column(self, column_type, column_name):
+        """
+        Set one column in the CSV file to a
+        pre-determined column (in columns.py).
+
+        Use set_columns(args) to set multiple columns.
+
+        Parameters
+        ----------
+
+        column_type: str
+            type of column
+
+        column_name: str
+            CSV column name
+
+        example: {
+            "Auto balls scored high": "balls scored high auto"
+        }
+        """
+
+        self.column_types[column_type] = column_name
+
+
     def set_columns(self, columns_types: dict):
         """
         Set each column in the CSV file to a
         pre-determined columns (in columns.py).
+
+        Use set_column(args) to set one column.
+
+        Does not overwrite pre-existing column types,
+        unless using the same name.
 
         Preferably every column in columns.py should
         be set to a CSV column, but this is not necessary.
@@ -90,4 +120,5 @@ class PredictScouter:
             }
         """
 
-        self.column_types = columns_types
+        for key, value in columns_types.items():
+            self.column_types[key] = value
