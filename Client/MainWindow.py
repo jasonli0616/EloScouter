@@ -67,13 +67,9 @@ class MainWindow(Tk):
             csv_file_dialog.close()
             globals.Prediction.prediction = PredictScouter.PredictScouter(csv_file_dialog.name)
 
-            # Display column selection window, close current window
-            for column in PredictScouter.columns:
-                column_selection_window = ColumnWindow(self, column)
-                column_selection_window.wait_window()
-
-            # Set selected columns to predictor backend
-            globals.Prediction.prediction.set_columns(globals.GUI.selected_columns)
+            # Display column selection window
+            column_select = ColumnWindow(self)
+            column_select.wait_window()
 
         else:
 
