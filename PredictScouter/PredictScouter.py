@@ -1,4 +1,7 @@
 import os
+import csv
+
+from . import columns
 
 class PredictScouter:
 
@@ -6,14 +9,22 @@ class PredictScouter:
         """
         Constructor for the prediction model.
 
-        Sets the CSV value for the 
+        This opens the CSV file, and does not close it.
+        The file should be closed when the program closes
+        by calling PredictScouter.close_csv_file().
         """
 
         if not os.path.isfile(csv_file_path):
             raise FileNotFoundError(f"The selected path: '{csv_file_path}' is not a file.")
 
         self._csv_file_path = csv_file_path
+        self._csv_file = open(csv_file_path, 'r')
         self.column_types = dict()
+
+
+    def close_csv_file(self):
+        """Closes the CSV file."""
+        self._csv_file.close()
 
 
     def get_csv_file_path(self):
@@ -30,21 +41,23 @@ class PredictScouter:
         return self._csv_file_path
 
 
-    def _read_csv(self) -> str:
+    def _read_csv(self):
         """
-        Return the text contents of the CSV file.
+        Return the reader of the CSV file.
+
+        Note: The file is not closed here.
+
+        Reference:
+        https://docs.python.org/3/library/csv.html#csv.reader
 
         Returns
         ----------
 
-        str
-            the contents of the CSV file
+        csv.reader
+            the reader of the CSV file
         """
 
-        with open(self._csv_file_path, 'r') as f:
-            csv_contents = f.read()
-            f.close()
-        return csv_contents
+        return csv.reader(self._csv_file)
 
 
     def get_columns(self) -> list:
@@ -63,42 +76,24 @@ class PredictScouter:
             the columns in the CSV file
         """
 
-        return self._read_csv()         \
-                    .splitlines()[0]    \
-                    .split(',')
+        # return self._read_csv()         \
+        #             .splitlines()[0]    \
+        #             .split(',')
+        return next(self._read_csv())
 
-
-
-    def set_column(self, column_type, column_name):
+    def get_teams(self) -> list:
         """
-        Set one column in the CSV file to a
-        pre-determined column (in columns.py).
-
-        Use set_columns(args) to set multiple columns.
-
-        Parameters
-        ----------
-
-        column_type: str
-            type of column
-
-        column_name: str
-            CSV column name
-
-        example: {
-            "Auto balls scored high": "balls scored high auto"
-        }
+        Return all the columns in the CSV file.
         """
 
-        self.column_types[column_type] = column_name
+        team_number_csv_column = self.column_types[columns.TEAM_NUMBER]
+
 
 
     def set_columns(self, columns_types: dict):
         """
         Set each column in the CSV file to a
         pre-determined columns (in columns.py).
-
-        Use set_column(args) to set one column.
 
         Does not overwrite pre-existing column types,
         unless using the same name.
@@ -122,3 +117,23 @@ class PredictScouter:
 
         for key, value in columns_types.items():
             self.column_types[key] = value
+
+        self._rank_teams()
+
+
+    def _rank_teams(self):
+        """
+        This is the main (private) method that implements the algorithm.
+
+        Algorithm explanation:
+        For every column in each team, the outliers will be
+        removed and the average will be calculated. Based on
+        the positivity/negativity of the columns (eg. balls
+        scored vs balls missed), a singular numeric value will
+        be calculated for each team using the average of each
+        column. This numeric value will serve as the ranking
+        to predict a win or loss. The averaged column data will
+        serve as the predicted match data.
+        """
+
+        self.get_teams()

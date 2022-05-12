@@ -43,9 +43,9 @@ class ColumnWindow(Toplevel):
         dropdowns_frame.pack(expand=True)
 
         all_csv_columns = globals.Prediction.prediction.get_columns()
-        self.column_vars = {column: StringVar() for column in PredictScouter.columns}
+        self.column_vars = {column: StringVar() for column in PredictScouter.columns.columns}
 
-        for column in PredictScouter.columns:
+        for column in PredictScouter.columns.columns:
             column_frame = ttk.Frame(dropdowns_frame)
             column_frame.pack()
             ttk.Label(column_frame, text=f'{column}: ').pack(side=LEFT)

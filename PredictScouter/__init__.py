@@ -1,2 +1,2 @@
 from .PredictScouter import PredictScouter
-from .columns import columns
+from . import columns
