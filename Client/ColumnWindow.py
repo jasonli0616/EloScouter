@@ -76,6 +76,15 @@ class ColumnWindow(Toplevel):
             if v.get():
                 column_vars_filtered[k] = v.get()
 
-        globals.Prediction.prediction.set_columns(column_vars_filtered)
+        # Enforce team number and match number selection
+        
+        if not PredictScouter.columns.TEAM_NUMBER in column_vars_filtered.keys():
+            messagebox.showerror('Error', 'No team number selected.')
+        
+        elif not PredictScouter.columns.MATCH_NUMBER in column_vars_filtered.keys():
+            messagebox.showerror('Error', 'No match number selected.')
 
-        self.destroy()
+        else:
+            globals.Prediction.prediction.set_columns(column_vars_filtered)
+
+            self.destroy()

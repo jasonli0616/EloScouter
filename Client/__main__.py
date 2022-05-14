@@ -13,10 +13,5 @@ from .MainWindow import MainWindow
 # Display the current view
 window = MainWindow()
 
-def closing_event():
-    globals.Prediction.prediction.close_csv_file()
-    window.destroy()
-
-window.protocol("WM_DELETE_WINDOW", closing_event)
 
 window.mainloop()

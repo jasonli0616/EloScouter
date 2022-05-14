@@ -15,5 +15,6 @@ columns = [
     'Climb level',
 ]
 
-# Set a constant to represent the team number in the list.
+# Set a constant to represent the team & match number in the list.
 TEAM_NUMBER = 'Team number'
+MATCH_NUMBER = 'Match number'

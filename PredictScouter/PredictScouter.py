@@ -1,6 +1,7 @@
 import os
 import csv
 
+from .Team import Team
 from . import columns
 
 class PredictScouter:
@@ -17,14 +18,14 @@ class PredictScouter:
         if not os.path.isfile(csv_file_path):
             raise FileNotFoundError(f"The selected path: '{csv_file_path}' is not a file.")
 
+        # Store DictReader as global variable
+        # Reference: https://docs.python.org/3/library/csv.html#csv.DictReader
+        with open(csv_file_path, 'r') as f:
+            self._csv_dictreader = list(csv.DictReader(f))
+
         self._csv_file_path = csv_file_path
-        self._csv_file = open(csv_file_path, 'r')
         self.column_types = dict()
-
-
-    def close_csv_file(self):
-        """Closes the CSV file."""
-        self._csv_file.close()
+        self.teams = []
 
 
     def get_csv_file_path(self):
@@ -39,25 +40,6 @@ class PredictScouter:
         """
 
         return self._csv_file_path
-
-
-    def _read_csv(self):
-        """
-        Return the reader of the CSV file.
-
-        Note: The file is not closed here.
-
-        Reference:
-        https://docs.python.org/3/library/csv.html#csv.reader
-
-        Returns
-        ----------
-
-        csv.reader
-            the reader of the CSV file
-        """
-
-        return csv.reader(self._csv_file)
 
 
     def get_columns(self) -> list:
@@ -76,18 +58,35 @@ class PredictScouter:
             the columns in the CSV file
         """
 
-        # return self._read_csv()         \
-        #             .splitlines()[0]    \
-        #             .split(',')
-        return next(self._read_csv())
+        return self._csv_dictreader[0]
 
-    def get_teams(self) -> list:
+
+    def get_team_numbers(self) -> list:
         """
         Return all the columns in the CSV file.
+
+        This method will go through all the columns in the
+        CSV file, and append the team number to a list.
+        The list is then converted to a set and back to a
+        list, to ensure that there are no duplicates.
+
+        Returns
+        ----------
+
+        list[str]
+            a list of all the team numbers stored as a string
+            (this is not a list of the Team object)
         """
 
-        team_number_csv_column = self.column_types[columns.TEAM_NUMBER]
+        teams = []
 
+        for column in self._csv_dictreader:
+
+            team_number = column[self.column_types[columns.TEAM_NUMBER]].strip()
+            if team_number:
+                teams.append(team_number)
+
+        return list(set(teams))
 
 
     def set_columns(self, columns_types: dict):
@@ -136,4 +135,10 @@ class PredictScouter:
         serve as the predicted match data.
         """
 
-        self.get_teams()
+        self.teams.clear()
+
+        teams = self.get_team_numbers()
+
+        for team_number in teams:
+            team = Team(team_number)
+            self.teams.append(team)
