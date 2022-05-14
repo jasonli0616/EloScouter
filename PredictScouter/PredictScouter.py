@@ -119,6 +119,17 @@ class PredictScouter:
 
         self._rank_teams()
 
+    
+    def clear_column_types(self):
+        """
+        Clear the column types.
+
+        This is called when a non-numeric value is entered,
+        and must be reset.
+        """
+
+        self._column_types = dict()
+
 
     def get_column_types(self):
         """
@@ -163,5 +174,5 @@ class PredictScouter:
         teams = self.get_team_numbers()
 
         for team_number in teams:
-            team = Team(team_number)
+            team = Team(team_number, self._csv_dictreader, self._column_types)
             self.teams.append(team)

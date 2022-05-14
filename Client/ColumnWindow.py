@@ -85,6 +85,14 @@ class ColumnWindow(Toplevel):
             messagebox.showerror('Error', 'No match number selected.')
 
         else:
-            globals.Prediction.prediction.set_column_types(column_vars_filtered)
 
-            self.destroy()
+            try:
+                globals.Prediction.prediction.set_column_types(column_vars_filtered)
+
+                self.destroy()
+
+            except TypeError as error:
+                # Non-numeric data
+
+                messagebox.showerror('Non-numeric data', error)
+                globals.Prediction.prediction.clear_column_types()
