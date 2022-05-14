@@ -85,6 +85,6 @@ class ColumnWindow(Toplevel):
             messagebox.showerror('Error', 'No match number selected.')
 
         else:
-            globals.Prediction.prediction.set_columns(column_vars_filtered)
+            globals.Prediction.prediction.set_column_types(column_vars_filtered)
 
             self.destroy()

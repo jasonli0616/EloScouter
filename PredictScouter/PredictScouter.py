@@ -24,7 +24,7 @@ class PredictScouter:
             self._csv_dictreader = list(csv.DictReader(f))
 
         self._csv_file_path = csv_file_path
-        self.column_types = dict()
+        self._column_types = dict()
         self.teams = []
 
 
@@ -82,14 +82,14 @@ class PredictScouter:
 
         for column in self._csv_dictreader:
 
-            team_number = column[self.column_types[columns.TEAM_NUMBER]].strip()
+            team_number = column[self._column_types[columns.TEAM_NUMBER]].strip()
             if team_number:
                 teams.append(team_number)
 
         return list(set(teams))
 
 
-    def set_columns(self, columns_types: dict):
+    def set_column_types(self, columns_types: dict):
         """
         Set each column in the CSV file to a
         pre-determined columns (in columns.py).
@@ -115,9 +115,32 @@ class PredictScouter:
         """
 
         for key, value in columns_types.items():
-            self.column_types[key] = value
+            self._column_types[key] = value
 
         self._rank_teams()
+
+
+    def get_column_types(self):
+        """
+        Return the types of columns in the CSV file.
+
+        See PredictScouter.set_column_types() for more info.
+
+        Returns
+        ----------
+
+        dict
+            the types of each column
+
+            key: type of column
+            value: CSV column name
+
+            example: {
+                "Auto balls scored high": "balls scored high auto"
+            }
+        """
+
+        return self._column_types
 
 
     def _rank_teams(self):

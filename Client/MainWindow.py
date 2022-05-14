@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog, messagebox
+import traceback
 
 import PredictScouter
 
@@ -20,6 +21,8 @@ class MainWindow(Tk):
         """
 
         super().__init__()
+
+        self.report_callback_exception = self.handle_errors
 
         self.geometry('300x200')
         self.title('EloScouter')
@@ -46,6 +49,20 @@ class MainWindow(Tk):
         help_button.pack()
 
 
+    def handle_errors(self, *args):
+        """
+        Display error messages to the user.
+
+        This is a last-resort error handling method.
+        All errors within the program have been handled,
+        this method is used for random errors (eg. file corruption,
+        file deletion while predicting, etc.)
+        """
+
+        error = traceback.format_exception(*args)
+        messagebox.showerror('Error', 'An error has occured:\n\n' + '\n'.join(error))
+
+
     def handle_import_button(self):
         """
         Prompt user to import a CSV file.
@@ -68,8 +85,21 @@ class MainWindow(Tk):
             globals.Prediction.prediction = PredictScouter.PredictScouter(csv_file_dialog.name)
 
             # Display column selection window
+            # Hide main window, re-show when selection finished
             column_select = ColumnWindow(self)
+            self.withdraw()
             column_select.wait_window()
+            self.deiconify()
+
+            # If columns have been selected, move to next step
+            if globals.Prediction.prediction.get_column_types():
+
+                # Show imported file
+                ttk.Label(self, text='Imported file:').pack()
+                ttk.Label(self, text=csv_file_dialog.name, wraplength=self.winfo_width()).pack()
+
+                # Show predict button
+                ttk.Button(self, text='Predict a match', command=self.handle_predict_button).pack()
 
         else:
 
@@ -84,3 +114,13 @@ class MainWindow(Tk):
         Functionality to be implemented in a later version.
         """
         pass
+
+
+    def handle_predict_button(self):
+        """
+        Handle the predict match button.
+
+        This button will only be shown once the information
+        from the CSV file has been collected, and a prediction
+        can actually be made.
+        """
