@@ -176,3 +176,5 @@ class PredictScouter:
         for team_number in teams:
             team = Team(team_number, self._csv_dictreader, self._column_types)
             self.teams.append(team)
+
+        self.teams = sorted(self.teams, key=lambda team: team.ranking)

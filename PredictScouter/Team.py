@@ -1,5 +1,5 @@
 import numpy as np
-import math
+from pprint import pprint
 
 from . import columns
 
@@ -23,12 +23,11 @@ class Team:
 
         self.team_number = team_number
         self.matches = []
-        self.match_column_averages = dict()
-        self.ranking = 0
-        self.set_team_matches_from_csv(csv_dict_reader, column_types)
+        self.match_column_averages = self._set_team_matches_from_csv(csv_dict_reader, column_types)
+        self.ranking = self._set_team_ranking()
 
 
-    def set_team_matches_from_csv(self, csv_dict_reader, column_types):
+    def _set_team_matches_from_csv(self, csv_dict_reader, column_types):
         """
         Set the team matches to a class attribute.
 
@@ -44,6 +43,12 @@ class Team:
 
         column_types: dict
             the types of each CSV column
+
+        Returns
+        ----------
+
+        dict[str, int]
+            a key-value pair of the column name, and the average
         """
 
         for column in csv_dict_reader:
@@ -51,10 +56,10 @@ class Team:
             if column_team_number == self.team_number:
                 self.matches.append(column)
 
-        self.process_matches(column_types)
+        return self._process_matches(column_types)
 
 
-    def process_matches(self, column_types):
+    def _process_matches(self, column_types):
         """
         For each column, collect all the data for this team.
         Remove the outliers, and calculate an average for that column.
@@ -69,6 +74,12 @@ class Team:
 
         column_types: dict
             the types of each CSV column
+
+        Returns
+        ----------
+
+        dict[str, int]
+            a key-value pair of the column name, and the average
         """
 
         columns_data = dict()
@@ -97,11 +108,47 @@ class Team:
             # Remove outliers from data list, and calculate average
             column_data_no_outliers = Team.remove_outliers(column_data)
             column_average = round(sum(column_data_no_outliers) / len(column_data_no_outliers))
+
+            columns_data[column_name] = column_average
+
+        return columns_data
+
+
+    def _set_team_ranking(self):
+        """
+        Create team ranking.
+
+        The positivity/negativity of the columns (eg. balls scored vs
+        balls missed), a singular numeric value will be calculated
+        for each team using the average of each column.
+        This numeric value will serve as the ranking to predict a win or loss.
+
+        Returns
+        ----------
+
+        int
+            the team ranking
+        """
+
+        ranking_positive = 0
+        ranking_positive_amount = 0
+
+        ranking_negative = 0
+        ranking_negative_amount = 0
+
+        for column_name, column_average in self.match_column_averages.items():
+            if columns.columns[column_name] == 1:
+                ranking_positive += column_average
+                ranking_positive_amount += 1
+
+            elif columns.columns[column_name] == -1:
+                ranking_negative += column_average
+                ranking_negative_amount += 1
             
-            print(column_name)
-            print(column_average)
-            print(column_data)
-            print('\n')
+        ranking_positive /= ranking_positive_amount
+        ranking_negative /= ranking_negative_amount
+
+        return round((ranking_positive - ranking_negative) * 100)
 
 
     @staticmethod
