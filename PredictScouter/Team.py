@@ -144,9 +144,10 @@ class Team:
             elif columns.columns[column_name] == -1:
                 ranking_negative += column_average
                 ranking_negative_amount += 1
-            
-        ranking_positive /= ranking_positive_amount
-        ranking_negative /= ranking_negative_amount
+
+        if (ranking_positive > 0) and (ranking_negative > 0):
+            ranking_positive /= ranking_positive_amount
+            ranking_negative /= ranking_negative_amount
 
         return round((ranking_positive - ranking_negative) * 100)
 
