@@ -133,3 +133,6 @@ class MainWindow(Tk):
         from the CSV file has been collected, and a prediction
         can actually be made.
         """
+
+        # Sample match data while developing method
+        globals.Prediction.prediction.predict_match(['5409', '772'], ['1', '2'])

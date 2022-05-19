@@ -178,3 +178,34 @@ class PredictScouter:
             self.teams.append(team)
 
         self.teams = sorted(self.teams, key=lambda team: team.ranking)
+
+
+    def predict_match(self, red_alliance, blue_alliance):
+        """
+        Predict a hypothetical match result, based on the team rankings.
+
+        Parameters
+        ----------
+
+        red_alliance: list
+            list of red alliance team numbers
+
+        blue_alliance: list
+            list of blue alliance team numbers
+        """
+
+        for team_number in (red_alliance + blue_alliance):
+            all_team_numbers = list(map(lambda team: team.team_number, self.teams))
+            if team_number not in all_team_numbers:
+                raise KeyError(f"Team '{team_number}' not found in CSV file.")
+
+        red_alliance_teams = list(filter(lambda team: team.team_number in red_alliance))
+        blue_alliance_teams = list(filter(lambda team: team.team_number in blue_alliance))
+
+        print('RED:')
+        for rteam in red_alliance_teams:
+            print(f'{rteam.team_number} : {rteam.ranking}\n')
+
+        print('BLUE:')
+        for bteam in blue_alliance_teams:
+            print(f'{bteam.team_number} : {bteam.ranking}\n')
