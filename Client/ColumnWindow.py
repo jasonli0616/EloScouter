@@ -79,10 +79,10 @@ class ColumnWindow(Toplevel):
         # Enforce team number and match number selection
         
         if not PredictScouter.columns.TEAM_NUMBER in column_vars_filtered.keys():
-            messagebox.showerror('Error', 'No team number selected.')
+            raise AttributeError('No team number selected.')
         
         elif not PredictScouter.columns.MATCH_NUMBER in column_vars_filtered.keys():
-            messagebox.showerror('Error', 'No match number selected.')
+            raise AttributeError('No match number selected.')
 
         else:
 
@@ -91,8 +91,6 @@ class ColumnWindow(Toplevel):
 
                 self.destroy()
 
-            except TypeError as error:
-                # Non-numeric data
-
-                messagebox.showerror('Non-numeric data', error)
+            except TypeError:
                 globals.Prediction.prediction.clear_column_types()
+                raise TypeError('Non-numeric data in CSV file.')

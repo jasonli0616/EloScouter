@@ -53,14 +53,23 @@ class MainWindow(Tk):
         """
         Display error messages to the user.
 
-        This is a last-resort error handling method.
-        All errors within the program have been handled,
-        this method is used for random errors (eg. file corruption,
-        file deletion while predicting, etc.)
+        ALL errors, including purposely raised errors by
+        the program (eg. team doesn't exist) will be handled
+        by this method.
         """
 
         error = traceback.format_exception(*args)
-        messagebox.showerror('Error', 'An error has occured:\n\n' + '\n'.join(error))
+
+        # Gather error message
+        main_error = error[-1]
+        error.pop()
+
+        error_message = 'An error has occcured:\n\n'    \
+                        + f'{main_error}\n\n'           \
+                        + '----- Advanced: -----\n\n'   \
+                        + '\n'.join(error)
+
+        messagebox.showerror('Error', error_message, parent=self.focus_get())
 
 
     def handle_import_button(self):
@@ -104,7 +113,7 @@ class MainWindow(Tk):
         else:
 
             # Display error on cancel
-            messagebox.showerror('File import error', 'No CSV file imported')
+            raise FileNotFoundError('File import cancelled, no CSV file imported.')
 
 
     def handle_help_button(self):
