@@ -137,12 +137,14 @@ class Team:
         ranking_negative_amount = 0
 
         for column_name, column_average in self.match_column_averages.items():
-            if columns.columns[column_name] == 1:
-                ranking_positive += column_average
+            column_weight = columns.columns[column_name]
+
+            if column_weight > 0:
+                ranking_positive += column_average * column_weight
                 ranking_positive_amount += 1
 
-            elif columns.columns[column_name] == -1:
-                ranking_negative += column_average
+            elif column_weight == -1:
+                ranking_negative += column_average * column_weight
                 ranking_negative_amount += 1
 
         if (ranking_positive > 0) and (ranking_negative > 0):
