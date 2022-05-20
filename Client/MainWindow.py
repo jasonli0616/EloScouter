@@ -7,6 +7,7 @@ import PredictScouter
 
 from . import globals
 from .ColumnWindow import ColumnWindow
+from .PredictWindow import PredictWindow
 
 
 class MainWindow(Tk):
@@ -134,5 +135,7 @@ class MainWindow(Tk):
         can actually be made.
         """
 
+        predict_window = PredictWindow(self)
+        predict_window.focus()
+
         # Sample match data while developing method
-        globals.Prediction.prediction.predict_match(['5409', '772'], ['1', '2'])
