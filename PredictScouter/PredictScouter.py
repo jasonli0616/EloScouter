@@ -194,13 +194,20 @@ class PredictScouter:
             list of blue alliance team numbers
         """
 
+        # Check that all teams are in CSV file
         for team_number in (red_alliance + blue_alliance):
+
+            # Check that all teams are in CSV file
             all_team_numbers = list(map(lambda team: team.team_number, self.teams))
             if team_number not in all_team_numbers:
                 raise KeyError(f"Team '{team_number}' not found in CSV file.")
 
-        red_alliance_teams = list(filter(lambda team: team.team_number in red_alliance))
-        blue_alliance_teams = list(filter(lambda team: team.team_number in blue_alliance))
+            # Check that teams are not repeated
+            if (red_alliance + blue_alliance).count(team_number) > 1:
+                raise ValueError(f"Team '{team_number}' duplicated in prediction match.")
+
+        red_alliance_teams = list(filter(lambda team: team.team_number in red_alliance, self.teams))
+        blue_alliance_teams = list(filter(lambda team: team.team_number in blue_alliance, self.teams))
 
         print('RED:')
         for rteam in red_alliance_teams:
