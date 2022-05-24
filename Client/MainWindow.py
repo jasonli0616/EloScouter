@@ -137,5 +137,3 @@ class MainWindow(Tk):
 
         predict_window = PredictWindow(self)
         predict_window.focus()
-
-        # Sample match data while developing method

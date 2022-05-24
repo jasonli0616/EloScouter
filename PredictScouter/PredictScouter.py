@@ -209,10 +209,7 @@ class PredictScouter:
         red_alliance_teams = list(filter(lambda team: team.team_number in red_alliance, self.teams))
         blue_alliance_teams = list(filter(lambda team: team.team_number in blue_alliance, self.teams))
 
-        print('RED:')
-        for rteam in red_alliance_teams:
-            print(f'{rteam.team_number} : {rteam.ranking}\n')
+        red_alliance_total = sum(map(lambda team: team.ranking, red_alliance_teams))
+        blue_alliance_total = sum(map(lambda team: team.ranking, blue_alliance_teams))
 
-        print('BLUE:')
-        for bteam in blue_alliance_teams:
-            print(f'{bteam.team_number} : {bteam.ranking}\n')
+        all_teams = sorted(red_alliance_teams + blue_alliance_teams, key=lambda team: team.ranking, reverse=True)
