@@ -45,6 +45,7 @@ class ColumnWindow(Toplevel):
         all_csv_columns = globals.Prediction.prediction.get_columns()
         self.column_vars = {column: StringVar() for column in PredictScouter.columns.columns}
 
+        # Create dropdown menus
         for column in PredictScouter.columns.columns:
             column_frame = ttk.Frame(dropdowns_frame)
             column_frame.pack()

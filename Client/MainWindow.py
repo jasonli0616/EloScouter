@@ -40,12 +40,15 @@ class MainWindow(Tk):
         - Help button
         """
 
+        # Title bar
         title = ttk.Label(self, text='EloScouter', font=('*', 32))
         title.pack()
 
+        # Import CSV button
         import_button = ttk.Button(self, text='Import CSV file', command=self.handle_import_button)
         import_button.pack()
 
+        # Help button
         help_button = ttk.Button(self, text='Help', command=self.handle_help_button)
         help_button.pack()
 

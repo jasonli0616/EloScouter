@@ -45,6 +45,7 @@ class PredictWindow(Toplevel):
         - Predict button
         """
 
+        # Title
         title = ttk.Label(self, text='Predict a match', font=('*', 26))
         title.pack()
 
@@ -57,12 +58,15 @@ class PredictWindow(Toplevel):
         self.red_alliance_frame.pack(side=LEFT)
         self.blue_alliance_frame.pack(side=LEFT)
 
+        # Labels for alliances
         ttk.Label(self.red_alliance_frame, text='Red alliance').pack()
         ttk.Label(self.blue_alliance_frame, text='Blue alliance').pack()
 
+        # Add team to alliance button
         ttk.Button(self.red_alliance_frame, text='+', command=lambda: self.increase_team(self.RED)).pack()
         ttk.Button(self.blue_alliance_frame, text='+', command=lambda: self.increase_team(self.BLUE)).pack()
 
+        # Predict button
         ttk.Button(self, text='Predict match', command=self.handle_predict_button).pack()
 
 
@@ -84,6 +88,8 @@ class PredictWindow(Toplevel):
             all_team_numbers = sorted(all_team_numbers, key=lambda team_number: int(team_number))
         except ValueError:
             pass # Don't sort if team numbers are not numeric
+
+        # Create dropdown menu
 
         if alliance == self.RED:
             self.red_teams.append(team_var)
