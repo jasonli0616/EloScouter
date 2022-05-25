@@ -184,6 +184,8 @@ class PredictScouter:
         """
         Predict a hypothetical match result, based on the team rankings.
 
+        Returns match predictions as a tuple.
+
         Parameters
         ----------
 
@@ -192,6 +194,18 @@ class PredictScouter:
 
         blue_alliance: list
             list of blue alliance team numbers
+
+        Returns
+        ----------
+
+        int
+            total red alliance points, as determined as by algorithm
+
+        int
+            total blue alliance points, as determined as by algorithm
+
+        list[Team]
+            list of teams, sorted from highest ranking to lowest ranking
         """
 
         # Check that all teams are in CSV file
@@ -206,10 +220,15 @@ class PredictScouter:
             if (red_alliance + blue_alliance).count(team_number) > 1:
                 raise ValueError(f"Team '{team_number}' duplicated in prediction match.")
 
+        # Get all teams in red alliance
         red_alliance_teams = list(filter(lambda team: team.team_number in red_alliance, self.teams))
         blue_alliance_teams = list(filter(lambda team: team.team_number in blue_alliance, self.teams))
 
+        # Calculate total alliance rankings
         red_alliance_total = sum(map(lambda team: team.ranking, red_alliance_teams))
         blue_alliance_total = sum(map(lambda team: team.ranking, blue_alliance_teams))
 
+        # List of teams ranked highest to lowest
         all_teams = sorted(red_alliance_teams + blue_alliance_teams, key=lambda team: team.ranking, reverse=True)
+
+        return red_alliance_total, blue_alliance_total, all_teams
