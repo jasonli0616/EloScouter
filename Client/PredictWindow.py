@@ -1,10 +1,7 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter import filedialog, messagebox
 
-from click import command
-
-import PredictScouter
+from Client.ResultsWindow import ResultsWindow
 
 from . import globals
 
@@ -128,4 +125,5 @@ class PredictWindow(Toplevel):
         blue_alliance_teams = list(blue_alliance_teams)
 
         # Predict match
-        globals.Prediction.prediction.predict_match(red_alliance_teams, blue_alliance_teams)
+        prediction_results = globals.Prediction.prediction.predict_match(red_alliance_teams, blue_alliance_teams)
+        results_window = ResultsWindow()
