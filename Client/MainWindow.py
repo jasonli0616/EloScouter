@@ -68,8 +68,8 @@ class MainWindow(Tk):
         main_error = error[-1]
         error.pop()
 
-        error_message = 'An error has occcured:\n\n'    \
-                        + f'{main_error}\n\n'           \
+        error_message = 'Warning:\n\n'    \
+                        + f'{main_error}\n\n\n\n'           \
                         + '----- Advanced: -----\n\n'   \
                         + '\n'.join(error)
 
