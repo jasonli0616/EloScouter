@@ -205,8 +205,19 @@ class PredictScouter:
             total blue alliance points, as determined as by algorithm
 
         list[Team]
-            list of teams, sorted from highest ranking to lowest ranking
+            list of red alliance teams
+
+        list[Team]
+            list of blue alliance teams
         """
+
+        # Enforce teams are inputted.
+        if not red_alliance and not blue_alliance:
+            raise ValueError('No teams inputted.')
+        elif not red_alliance:
+            raise ValueError('No red alliance teams inputted.')
+        elif not blue_alliance:
+            raise ValueError('No blue alliance teams inputted.')
 
         # Check that all teams are in CSV file
         for team_number in (red_alliance + blue_alliance):
@@ -228,7 +239,4 @@ class PredictScouter:
         red_alliance_total = sum(map(lambda team: team.ranking, red_alliance_teams))
         blue_alliance_total = sum(map(lambda team: team.ranking, blue_alliance_teams))
 
-        # List of teams ranked highest to lowest
-        all_teams = sorted(red_alliance_teams + blue_alliance_teams, key=lambda team: team.ranking, reverse=True)
-
-        return red_alliance_total, blue_alliance_total, all_teams
+        return red_alliance_total, blue_alliance_total, red_alliance_teams, blue_alliance_teams

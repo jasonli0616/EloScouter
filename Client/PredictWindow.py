@@ -126,4 +126,5 @@ class PredictWindow(Toplevel):
 
         # Predict match
         prediction_results = globals.Prediction.prediction.predict_match(red_alliance_teams, blue_alliance_teams)
-        results_window = ResultsWindow()
+        ResultsWindow(self.master, prediction_results)
+        self.destroy()
