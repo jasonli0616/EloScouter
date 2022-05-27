@@ -1,11 +1,13 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog, messagebox
+import traceback
 
 import PredictScouter
 
 from . import globals
 from .ColumnWindow import ColumnWindow
+from .PredictWindow import PredictWindow
 
 
 class MainWindow(Tk):
@@ -20,6 +22,8 @@ class MainWindow(Tk):
         """
 
         super().__init__()
+
+        self.report_callback_exception = self.handle_errors
 
         self.geometry('300x200')
         self.title('EloScouter')
@@ -36,14 +40,40 @@ class MainWindow(Tk):
         - Help button
         """
 
+        # Title bar
         title = ttk.Label(self, text='EloScouter', font=('*', 32))
         title.pack()
 
+        # Import CSV button
         import_button = ttk.Button(self, text='Import CSV file', command=self.handle_import_button)
         import_button.pack()
 
+        # Help button
         help_button = ttk.Button(self, text='Help', command=self.handle_help_button)
         help_button.pack()
+
+
+    def handle_errors(self, *args):
+        """
+        Display error messages to the user.
+
+        ALL errors, including purposely raised errors by
+        the program (eg. team doesn't exist) will be handled
+        by this method.
+        """
+
+        error = traceback.format_exception(*args)
+
+        # Gather error message
+        main_error = error[-1]
+        error.pop()
+
+        error_message = 'Warning:\n\n'    \
+                        + f'{main_error}\n\n\n\n'           \
+                        + '----- Advanced: -----\n\n'   \
+                        + '\n'.join(error)
+
+        messagebox.showerror('Error', error_message, parent=self.focus_get())
 
 
     def handle_import_button(self):
@@ -67,20 +97,27 @@ class MainWindow(Tk):
             csv_file_dialog.close()
             globals.Prediction.prediction = PredictScouter.PredictScouter(csv_file_dialog.name)
 
-            # Display column selection window, close current window
-            for column in PredictScouter.columns:
-                column_selection_window = ColumnWindow(self, column)
-                column_selection_window.wait_window()
+            # Display column selection window
+            # Hide main window, re-show when selection finished
+            column_select = ColumnWindow(self)
+            self.withdraw()
+            column_select.wait_window()
+            self.deiconify()
 
-            # Set selected columns to predictor backend
-            globals.Prediction.prediction.set_columns(globals.GUI.selected_columns)
+            # If columns have been selected, move to next step
+            if globals.Prediction.prediction.get_column_types():
 
-            print(globals.Prediction.prediction.get_columns())
+                # Show imported file
+                ttk.Label(self, text='Imported file:').pack()
+                ttk.Label(self, text=csv_file_dialog.name, wraplength=self.winfo_width()).pack()
+
+                # Show predict button
+                ttk.Button(self, text='Predict a match', command=self.handle_predict_button).pack()
 
         else:
 
             # Display error on cancel
-            messagebox.showerror('File import error', 'No CSV file imported')
+            raise FileNotFoundError('File import cancelled, no CSV file imported.')
 
 
     def handle_help_button(self):
@@ -90,3 +127,16 @@ class MainWindow(Tk):
         Functionality to be implemented in a later version.
         """
         pass
+
+
+    def handle_predict_button(self):
+        """
+        Handle the predict match button.
+
+        This button will only be shown once the information
+        from the CSV file has been collected, and a prediction
+        can actually be made.
+        """
+
+        predict_window = PredictWindow(self)
+        predict_window.focus()

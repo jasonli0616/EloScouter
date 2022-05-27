@@ -11,4 +11,7 @@ from . import globals
 from .MainWindow import MainWindow
 
 # Display the current view
-MainWindow().mainloop()
+window = MainWindow()
+
+
+window.mainloop()

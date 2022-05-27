@@ -9,26 +9,18 @@ from . import globals
 
 class ColumnWindow(Toplevel):
 
-    def __init__(self, master, column_name):
+    def __init__(self, master):
         """
         Initialize the column selection window.
 
         - Configures screen size
         - Configures screen title
         - Draw components to the screen
-
-        Parameters
-        ----------
-
-        column_name
-            preset column name to ask
         """
 
         super().__init__(master)
 
         self.title('EloScouter - Select columns')
-
-        self.column_name = column_name
 
         self.draw()
 
@@ -50,12 +42,15 @@ class ColumnWindow(Toplevel):
         dropdowns_frame = ttk.Frame(self)
         dropdowns_frame.pack(expand=True)
 
-        ttk.Label(dropdowns_frame, text=f'{self.column_name}: ').pack(side=LEFT)
-
         all_csv_columns = globals.Prediction.prediction.get_columns()
+        self.column_vars = {column: StringVar() for column in PredictScouter.columns.columns}
 
-        self.csv_column_name = StringVar()
-        ttk.OptionMenu(dropdowns_frame, self.csv_column_name, '', *all_csv_columns).pack()
+        # Create dropdown menus
+        for column in PredictScouter.columns.columns:
+            column_frame = ttk.Frame(dropdowns_frame)
+            column_frame.pack()
+            ttk.Label(column_frame, text=f'{column}: ').pack(side=LEFT)
+            ttk.OptionMenu(column_frame, self.column_vars[column], '', *all_csv_columns).pack(side=LEFT)
 
         # Next button
         next_button = ttk.Button(self, text='Submit', command=self.handle_next_button)
@@ -71,14 +66,32 @@ class ColumnWindow(Toplevel):
         """
         Handle the submit button.
 
-        Puts the CSV column name into the global dict variable.
+        Puts the CSV column names into the predictor.
 
-        Destroys the window (main process may pop-up new window
-        for next column).
+        Destroys the window.
         """
-        csv_column_name = self.csv_column_name.get()
 
-        if csv_column_name:
-            globals.GUI.selected_columns[self.column_name] = csv_column_name
+        column_vars_filtered = dict()
 
-        self.destroy()
+        for k, v in self.column_vars.items():
+            if v.get():
+                column_vars_filtered[k] = v.get()
+
+        # Enforce team number and match number selection
+        
+        if not PredictScouter.columns.TEAM_NUMBER in column_vars_filtered.keys():
+            raise AttributeError('No team number selected.')
+        
+        elif not PredictScouter.columns.MATCH_NUMBER in column_vars_filtered.keys():
+            raise AttributeError('No match number selected.')
+
+        else:
+
+            try:
+                globals.Prediction.prediction.set_column_types(column_vars_filtered)
+
+                self.destroy()
+
+            except TypeError:
+                globals.Prediction.prediction.clear_column_types()
+                raise TypeError('Non-numeric data in CSV file.')
