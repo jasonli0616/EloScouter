@@ -129,23 +129,28 @@ class Team:
             the team ranking
         """
 
+        # Start off rankings (and match amounts) at 0
         ranking_positive = 0
         ranking_positive_amount = 0
 
         ranking_negative = 0
         ranking_negative_amount = 0
 
+        # Loop through columns to gather data
         for column_name, column_average in self.match_column_averages.items():
+            # Get positivity/negativity of column
             column_weight = columns.columns[column_name]
 
+            # Change ranking based on weight
             if column_weight > 0:
                 ranking_positive += column_average * column_weight
                 ranking_positive_amount += 1
 
-            elif column_weight == -1:
+            elif column_weight < 0:
                 ranking_negative += column_average * column_weight
                 ranking_negative_amount += 1
 
+        # Divide to get average
         if (ranking_positive > 0) and (ranking_negative > 0):
             ranking_positive /= ranking_positive_amount
             ranking_negative /= ranking_negative_amount
