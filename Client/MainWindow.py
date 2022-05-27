@@ -114,11 +114,6 @@ class MainWindow(Tk):
                 # Show predict button
                 ttk.Button(self, text='Predict a match', command=self.handle_predict_button).pack()
 
-        else:
-
-            # Display error on cancel
-            raise FileNotFoundError('File import cancelled, no CSV file imported.')
-
 
     def handle_help_button(self):
         """
