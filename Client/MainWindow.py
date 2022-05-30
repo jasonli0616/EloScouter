@@ -72,10 +72,7 @@ class MainWindow(Tk):
         main_error = error[-1]
         error.pop()
 
-        error_message = 'Warning:\n\n'    \
-                        + f'{main_error}\n\n\n\n'           \
-                        + '----- Advanced: -----\n\n'   \
-                        + '\n'.join(error)
+        error_message = f'Warning:\n\n{main_error}'
 
         messagebox.showerror('Error', error_message, parent=self.focus_get())
 

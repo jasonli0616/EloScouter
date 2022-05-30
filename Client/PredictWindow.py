@@ -90,11 +90,11 @@ class PredictWindow(Toplevel):
 
         if alliance == self.RED:
             self.red_teams.append(team_var)
-            ttk.OptionMenu(self.red_alliance_frame, team_var, '', *all_team_numbers).pack()
+            ttk.OptionMenu(self.red_alliance_frame, team_var, '', '', *all_team_numbers).pack()
 
         elif alliance == self.BLUE:
             self.blue_teams.append(team_var)
-            ttk.OptionMenu(self.blue_alliance_frame, team_var, '', *all_team_numbers).pack()
+            ttk.OptionMenu(self.blue_alliance_frame, team_var, '', '', *all_team_numbers).pack()
 
 
     def handle_predict_button(self):
