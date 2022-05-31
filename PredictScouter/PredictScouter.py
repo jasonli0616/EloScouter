@@ -10,9 +10,11 @@ class PredictScouter:
         """
         Constructor for the prediction model.
 
-        This opens the CSV file, and does not close it.
-        The file should be closed when the program closes
-        by calling PredictScouter.close_csv_file().
+        Parameters
+        ----------
+
+        csv_file_path: str
+            the csv file path
         """
 
         if not os.path.isfile(csv_file_path):

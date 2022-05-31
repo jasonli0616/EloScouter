@@ -18,6 +18,19 @@ class Team:
 
         team_number: str
             the team number (stored as a string for compatibility)
+
+        csv_dict_reader: list[Dict]
+            csv file data, structure of csv.DictReader
+
+        column_types: dict
+            the types of each column
+
+            key: type of column
+            value: CSV column name
+
+            example: {
+                "Auto balls scored high": "balls scored high auto"
+            }
         """
 
         self.team_number = team_number
@@ -41,7 +54,14 @@ class Team:
             https://docs.python.org/3/library/csv.html#csv.DictReader
 
         column_types: dict
-            the types of each CSV column
+            the types of each column
+
+            key: type of column
+            value: CSV column name
+
+            example: {
+                "Auto balls scored high": "balls scored high auto"
+            }
 
         Returns
         ----------
@@ -72,7 +92,14 @@ class Team:
         ----------
 
         column_types: dict
-            the types of each CSV column
+            the types of each column
+
+            key: type of column
+            value: CSV column name
+
+            example: {
+                "Auto balls scored high": "balls scored high auto"
+            }
 
         Returns
         ----------
