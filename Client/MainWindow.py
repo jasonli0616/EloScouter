@@ -1,7 +1,10 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog, messagebox
+
 import traceback
+import os
+import webbrowser
 
 import PredictScouter
 
@@ -124,9 +127,11 @@ class MainWindow(Tk):
         """
         Display the user manual to the user.
 
-        Functionality to be implemented in a later version.
+        Opens /docs/index.html in browser.
         """
-        pass
+
+        help_path = os.path.join(os.getcwd(), 'docs', 'index.html')
+        webbrowser.open(f'file://{help_path}')
 
 
     def handle_predict_button(self):

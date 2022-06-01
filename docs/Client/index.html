@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
+    <title>EloScouter - Client User Guide</title>
+</head>
+<body class="bg-dark">
+
+    <div class="container">
+        <a href="../index.html" class="text-info">Back</a>
+
+        <h1 class="text-white">User Guide</h1>
+
+        <p class="text-white">
+            Welcome to the official EloScouter client! EloScouter is a robotics prediction application.
+        </p>
+
+        <h2 class="text-white">How it works</h2>
+        <p class="text-white">
+            <strong>Here's the short version:</strong><br>
+            You feed the program data from previous matches in the competition.<br>
+            Then, the program will extract all the data and create a prediction for every category.<br>
+            Using these predictions, it will rank each team.<br>
+            When a match is predicted, it will predict the win/loss using these rankings.
+        </p>
+
+        <h2 class="text-white">How to use</h2>
+
+        <div>
+            <h4 class="text-white">Step 1. Import CSV file</h4>
+
+            <img src="./static/1a-Home.png" class="img-fluid" style="max-height: 50vh;" alt="Homepage">
+
+            <p class="text-white">
+
+                To begin, click on the "Import CSV file" button to give the program your scouting data.<br>
+                <a href="https://support.google.com/drive/answer/2423534" target="_blank" class="text-info">
+                    Learn how to download Google Sheets as CSV.
+                </a>
+
+            </p>
+
+            <img src="./static/1b-Import.png" class="img-fluid" style="max-height: 50vh;" alt="File dialog">
+
+            <p class="text-white">
+                Select your desired CSV file using the file dialog.
+            </p>
+        </div>
+
+        <div>
+            <h4 class="text-white">Step 2. Match the categories with the columns in the CSV file</h4>
+
+            <img src="./static/2a-SelectColumns.png" class="img-fluid" style="max-height: 50vh;" alt="Column selection dialog">
+
+            <p class="text-white">
+                Using the column selection dialog, match the preset categories with the columns in your CSV file.<br>
+                The program will automatically parse your file and extract the CSV columns.
+            </p>
+
+            <p class="text-white">
+                After you select the columns, it will be saved in cache in a <code>{filename}.elocache</code> file.<br>
+                The program will be able to auto-fill the columns next time you import this CSV file.<br>
+                If you do not wish for this to happen, simply delete the <code>{filename}.elocache</code> file.
+            </p>
+
+            <img src="./static/2b-ModifyColumns.png" class="img-fluid" style="max-height: 50vh;" alt="Modify columns">
+
+            <p class="text-white">
+                The preset columns may be modified within the code, when the competition changes.<br>
+                This can be done in <code>PredictScouter.columns.columns</code>.
+            </p>
+        </div>
+
+        <div>
+            <h4 class="text-white">Step 3. Predict a match</h4>
+            
+            <img src="./static/3a-Imported.png" class="img-fluid" style="max-height: 50vh;" alt="Homepage with CSV imported">
+
+            <p class="text-white">
+                Once you have successfully imported the CSV file, press "Predict a match" to predict a match.<br>
+                At this point, you can also change the CSV file and start again by pressing "Import CSV file" (return to Step 1).
+            </p>
+
+            <img src="./static/3b-Predict.png" class="img-fluid" style="max-height: 50vh;" alt="Predict a match">
+
+            <p class="text-white">
+                Use the "+" to increase a team, and use the dropdown selections to select a team.<br>
+                The left side is red alliance, and the left side is blue alliance.<br>
+                To remove a team, just leave the dropdown selection blank.
+            </p>
+
+        </div>
+
+        <div>
+
+            <h4 class="text-white">Step 4. View results</h4>
+
+            <img src="./static/4-Results.png" class="img-fluid" style="max-height: 50vh;" alt="Results">
+
+            <p class="text-white">
+                At the top of the results window, it will display the winning alliance.<br>
+                Below that, the window will display the teams of the red and blue alliance (separated) in a table.<br>
+                Within each table (alliance), the teams will be sorted from best (top) to worst (bottom).<br>
+                The red alliance table will always appear above the blue alliance table.<br>
+                You can view the specific predicted results for each category for each team.
+            </p>
+
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
