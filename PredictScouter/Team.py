@@ -18,6 +18,19 @@ class Team:
 
         team_number: str
             the team number (stored as a string for compatibility)
+
+        csv_dict_reader: list[Dict]
+            csv file data, structure of csv.DictReader
+
+        column_types: dict
+            the types of each column
+
+            key: type of column
+            value: CSV column name
+
+            example: {
+                "Auto balls scored high": "balls scored high auto"
+            }
         """
 
         self.team_number = team_number
@@ -41,7 +54,14 @@ class Team:
             https://docs.python.org/3/library/csv.html#csv.DictReader
 
         column_types: dict
-            the types of each CSV column
+            the types of each column
+
+            key: type of column
+            value: CSV column name
+
+            example: {
+                "Auto balls scored high": "balls scored high auto"
+            }
 
         Returns
         ----------
@@ -72,7 +92,14 @@ class Team:
         ----------
 
         column_types: dict
-            the types of each CSV column
+            the types of each column
+
+            key: type of column
+            value: CSV column name
+
+            example: {
+                "Auto balls scored high": "balls scored high auto"
+            }
 
         Returns
         ----------
@@ -129,23 +156,28 @@ class Team:
             the team ranking
         """
 
+        # Start off rankings (and match amounts) at 0
         ranking_positive = 0
         ranking_positive_amount = 0
 
         ranking_negative = 0
         ranking_negative_amount = 0
 
+        # Loop through columns to gather data
         for column_name, column_average in self.match_column_averages.items():
+            # Get positivity/negativity of column
             column_weight = columns.columns[column_name]
 
+            # Change ranking based on weight
             if column_weight > 0:
                 ranking_positive += column_average * column_weight
                 ranking_positive_amount += 1
 
-            elif column_weight == -1:
+            elif column_weight < 0:
                 ranking_negative += column_average * column_weight
                 ranking_negative_amount += 1
 
+        # Divide to get average
         if (ranking_positive > 0) and (ranking_negative > 0):
             ranking_positive /= ranking_positive_amount
             ranking_negative /= ranking_negative_amount

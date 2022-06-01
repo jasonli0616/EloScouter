@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter import filedialog, messagebox
+
+import os
+import json
 
 import PredictScouter
 
@@ -21,6 +23,15 @@ class ColumnWindow(Toplevel):
         super().__init__(master)
 
         self.title('EloScouter - Select columns')
+
+        # Attempt to collect files from stored cache
+        # If there is not stored cache, store cache after selection
+        self.cache_file_path = f'{globals.Prediction.prediction.get_csv_file_path()}.elocache'
+
+        if os.path.isfile(self.cache_file_path):
+            with open(self.cache_file_path, 'r') as f:
+                data = json.load(f)
+            self.set_column_types(data)
 
         self.draw()
 
@@ -50,7 +61,15 @@ class ColumnWindow(Toplevel):
             column_frame = ttk.Frame(dropdowns_frame)
             column_frame.pack()
             ttk.Label(column_frame, text=f'{column}: ').pack(side=LEFT)
-            ttk.OptionMenu(column_frame, self.column_vars[column], '', *all_csv_columns).pack(side=LEFT)
+
+            # Set column default (if stored in cache)
+            column_default = ''
+            try:
+                column_default = globals.Prediction.prediction.get_column_types()[column]
+            except KeyError:
+                pass # If not stored in cache
+
+            ttk.OptionMenu(column_frame, self.column_vars[column], column_default, '', *all_csv_columns).pack(side=LEFT)
 
         # Next button
         next_button = ttk.Button(self, text='Submit', command=self.handle_next_button)
@@ -77,20 +96,47 @@ class ColumnWindow(Toplevel):
             if v.get():
                 column_vars_filtered[k] = v.get()
 
+        self.set_column_types(column_vars_filtered)
+        self.destroy()
+
+
+    def set_column_types(self, data):
+        """
+        Send the CSV column names into the predictor.
+
+        Parameters
+        ----------
+
+        data: dict
+            the types of each column
+
+            key: type of column
+            value: CSV column name
+
+            example: {
+                "Auto balls scored high": "balls scored high auto"
+            }
+        """
+
         # Enforce team number and match number selection
         
-        if not PredictScouter.columns.TEAM_NUMBER in column_vars_filtered.keys():
+        if PredictScouter.columns.TEAM_NUMBER not in data.keys():
             raise AttributeError('No team number selected.')
         
-        elif not PredictScouter.columns.MATCH_NUMBER in column_vars_filtered.keys():
+        elif PredictScouter.columns.MATCH_NUMBER not in data.keys():
             raise AttributeError('No match number selected.')
 
         else:
 
             try:
-                globals.Prediction.prediction.set_column_types(column_vars_filtered)
 
-                self.destroy()
+                # Store column cache (auto-fill next time)
+
+                with open(self.cache_file_path, 'w') as f:
+                    json.dump(data, f)
+
+                # Set columns to predictor
+                globals.Prediction.prediction.set_column_types(data)
 
             except TypeError:
                 globals.Prediction.prediction.clear_column_types()

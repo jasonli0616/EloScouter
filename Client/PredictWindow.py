@@ -75,6 +75,12 @@ class PredictWindow(Toplevel):
         Reference: https://docs.python.org/3/library/tkinter.html#coupling-widget-variables
 
         Then, add dropdown menu to screen.
+
+        Parameter
+        ----------
+
+        alliance
+            the alliance to increase a team to
         """
 
         all_team_numbers = globals.Prediction.prediction.get_team_numbers()
@@ -90,11 +96,11 @@ class PredictWindow(Toplevel):
 
         if alliance == self.RED:
             self.red_teams.append(team_var)
-            ttk.OptionMenu(self.red_alliance_frame, team_var, '', *all_team_numbers).pack()
+            ttk.OptionMenu(self.red_alliance_frame, team_var, '', '', *all_team_numbers).pack()
 
         elif alliance == self.BLUE:
             self.blue_teams.append(team_var)
-            ttk.OptionMenu(self.blue_alliance_frame, team_var, '', *all_team_numbers).pack()
+            ttk.OptionMenu(self.blue_alliance_frame, team_var, '', '', *all_team_numbers).pack()
 
 
     def handle_predict_button(self):

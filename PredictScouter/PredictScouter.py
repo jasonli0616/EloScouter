@@ -10,22 +10,64 @@ class PredictScouter:
         """
         Constructor for the prediction model.
 
-        This opens the CSV file, and does not close it.
-        The file should be closed when the program closes
-        by calling PredictScouter.close_csv_file().
+        Parameters
+        ----------
+
+        csv_file_path: str
+            the csv file path
         """
 
         if not os.path.isfile(csv_file_path):
             raise FileNotFoundError(f"The selected path: '{csv_file_path}' is not a file.")
 
         # Store DictReader as global variable
-        # Reference: https://docs.python.org/3/library/csv.html#csv.DictReader
-        with open(csv_file_path, 'r') as f:
-            self._csv_dictreader = list(csv.DictReader(f))
+        self._csv_dictreader = self._get_csv_dictreader(csv_file_path)
+
+        if not self._csv_dictreader:
+            raise ValueError('Imported file is empty, invalid CSV file, or corrupted.')
 
         self._csv_file_path = csv_file_path
         self._column_types = dict()
         self.teams = []
+
+
+    def _get_csv_dictreader(self, csv_file_path):
+        """
+        Return the CSV DictReader.
+
+        Reference:
+        https://docs.python.org/3/library/csv.html#csv.DictReader
+
+        Parameters
+        ----------
+
+        csv_file_path: str
+            the csv file path
+
+        Returns
+        ----------
+
+        list[dict]
+            structure of CSV DictReader
+
+        Raises
+        ----------
+
+        ValueError
+            raised if the imported file is empty, invalid CSV, or corrupted
+        """
+
+        with open(csv_file_path, 'r') as f:
+            try:
+                dictreader = list(csv.DictReader(f))
+            except UnicodeDecodeError:
+                dictreader = []
+
+        # If empty, invalid CSV file, or corrupted
+        if not dictreader:
+            raise ValueError('Imported file is empty, invalid CSV file, or corrupted.')
+
+        return dictreader
 
 
     def get_csv_file_path(self):
@@ -51,7 +93,6 @@ class PredictScouter:
         This will return the list of the columns.
 
         Returns
-        
         ----------
 
         list

@@ -1,7 +1,10 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog, messagebox
+
 import traceback
+import os
+import webbrowser
 
 import PredictScouter
 
@@ -52,6 +55,10 @@ class MainWindow(Tk):
         help_button = ttk.Button(self, text='Help', command=self.handle_help_button)
         help_button.pack()
 
+        # Predict frame
+        self.predict_frame = ttk.Frame(self)
+        self.predict_frame.pack()
+
 
     def handle_errors(self, *args):
         """
@@ -68,10 +75,7 @@ class MainWindow(Tk):
         main_error = error[-1]
         error.pop()
 
-        error_message = 'Warning:\n\n'    \
-                        + f'{main_error}\n\n\n\n'           \
-                        + '----- Advanced: -----\n\n'   \
-                        + '\n'.join(error)
+        error_message = f'Warning:\n\n{main_error}'
 
         messagebox.showerror('Error', error_message, parent=self.focus_get())
 
@@ -104,29 +108,30 @@ class MainWindow(Tk):
             column_select.wait_window()
             self.deiconify()
 
+            # Remove pre-existing file displaying on screen, if any
+            for widget in self.predict_frame.winfo_children():
+                widget.destroy()
+
             # If columns have been selected, move to next step
             if globals.Prediction.prediction.get_column_types():
 
                 # Show imported file
-                ttk.Label(self, text='Imported file:').pack()
-                ttk.Label(self, text=csv_file_dialog.name, wraplength=self.winfo_width()).pack()
+                ttk.Label(self.predict_frame, text='Imported file:').pack()
+                ttk.Label(self.predict_frame, text=csv_file_dialog.name, wraplength=self.winfo_width()).pack()
 
                 # Show predict button
-                ttk.Button(self, text='Predict a match', command=self.handle_predict_button).pack()
-
-        else:
-
-            # Display error on cancel
-            raise FileNotFoundError('File import cancelled, no CSV file imported.')
+                ttk.Button(self.predict_frame, text='Predict a match', command=self.handle_predict_button).pack()
 
 
     def handle_help_button(self):
         """
         Display the user manual to the user.
 
-        Functionality to be implemented in a later version.
+        Opens /docs/index.html in browser.
         """
-        pass
+
+        help_path = os.path.join(os.getcwd(), 'docs', 'index.html')
+        webbrowser.open(f'file://{help_path}')
 
 
     def handle_predict_button(self):
