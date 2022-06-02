@@ -1,3 +1,15 @@
+#-----------------------------------------------------------------------------
+# Name:        PredictScouter
+# Purpose:     The backend/algorithm side to the EloScouter application.
+#              More information to be included with final external submission (03-June-2022).
+#
+# Author:      Jason Li
+# Created:     05-May-2022
+# Updated:     01-June-2022
+#-----------------------------------------------------------------------------
+
+
+
 import os
 import csv
 

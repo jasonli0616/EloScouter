@@ -1,11 +1,14 @@
-"""
-EloScouter client
+#-----------------------------------------------------------------------------
+# Name:        EloScouter Client
+# Purpose:     The frontend client to access the EloScouter algorithm.
+#              More information to be included with final external submission (03-June-2022).
+#
+# Author:      Jason Li
+# Created:     05-May-2022
+# Updated:     01-June-2022
+#-----------------------------------------------------------------------------
 
-This module is the frontend client to access EloScouter.
-The functionality end is located in the PredictScouter folder.
 
-This file runs the main process.
-"""
 
 from . import globals
 from .MainWindow import MainWindow
