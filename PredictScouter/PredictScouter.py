@@ -69,7 +69,7 @@ class PredictScouter:
             raised if the imported file is empty, invalid CSV, or corrupted
         """
 
-        with open(csv_file_path, 'r') as f:
+        with open(csv_file_path, 'r', encoding='utf-8') as f:
             try:
                 dictreader = list(csv.DictReader(f))
             except UnicodeDecodeError:
