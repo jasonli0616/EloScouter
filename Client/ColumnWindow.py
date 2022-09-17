@@ -3,6 +3,7 @@ from tkinter import ttk
 
 import os
 import json
+from fuzzywuzzy import process
 
 import PredictScouter
 
@@ -53,7 +54,7 @@ class ColumnWindow(Toplevel):
         dropdowns_frame = ttk.Frame(self)
         dropdowns_frame.pack(expand=True)
 
-        all_csv_columns = globals.Prediction.prediction.get_columns()
+        self.all_csv_columns = globals.Prediction.prediction.get_columns()
         self.column_vars = {column: StringVar() for column in PredictScouter.columns.columns}
 
         # Create dropdown menus
@@ -69,7 +70,11 @@ class ColumnWindow(Toplevel):
             except KeyError:
                 pass # If not stored in cache
 
-            ttk.OptionMenu(column_frame, self.column_vars[column], column_default, '', *all_csv_columns).pack(side=LEFT)
+            ttk.OptionMenu(column_frame, self.column_vars[column], column_default, '', *self.all_csv_columns).pack(side=LEFT)
+
+        # Auto select button
+        autoselect_button = ttk.Button(self, text='Auto select', command=self.handle_autoselect_button)
+        autoselect_button.pack()
 
         # Next button
         next_button = ttk.Button(self, text='Submit', command=self.handle_next_button)
@@ -79,6 +84,21 @@ class ColumnWindow(Toplevel):
         # (lambda function is used to prevent passing
         # any arguments into self.handle_next_button())
         self.bind('<Return>', lambda x: self.handle_next_button())
+
+
+    def handle_autoselect_button(self):
+        """
+        Handle the auto select button.
+
+        Take the CSV column names, and automatically match
+        it to the available columns.
+        """
+
+        csv_columns = list(self.all_csv_columns.keys())
+
+        for k, v in self.column_vars.items():
+            result = process.extractOne(k, csv_columns)[0]
+            v.set(result)
 
 
     def handle_next_button(self):
