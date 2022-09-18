@@ -1,6 +1,6 @@
 # EloScouter
 
-To run program:
+### To run program:
 
 1. Install requirements
 
@@ -14,4 +14,5 @@ pip install -r requirements.txt
 python -m Client
 ```
 
-More information to be included with final external submission (03-June-2022).
+### Learn about the algorithm:
+[EloAlgorithm.md](./EloAlgorithm.md)
